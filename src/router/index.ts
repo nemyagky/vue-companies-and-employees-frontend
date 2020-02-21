@@ -17,6 +17,10 @@ export default new VueRouter({
       path: '/companies',
       name: 'Companies',
       component: Companies,
+    },
+    {
+      path: '**',
+      redirect: "/companies"
     }
   ]
 });

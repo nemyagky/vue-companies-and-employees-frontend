@@ -11,7 +11,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import DataTableHeader from "../interfaces/dataTableHeader.interface";
+import { DataTableHeader } from "vuetify";
 import { Employee } from "../interfaces/employee.interface";
 import Table from "../views/Table.vue";
 
