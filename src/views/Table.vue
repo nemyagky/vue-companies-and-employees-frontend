@@ -72,7 +72,7 @@ export default class Table extends Vue {
   private isPopupOpen: boolean = false;
 
   private activePage: number = 1;
-  private rowsPerPage: number = 10;
+  private rowsPerPage: number = 7;
 
   private openPopup(row: TableRow) {
     this.isPopupOpen = true;
