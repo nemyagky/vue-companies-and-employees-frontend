@@ -6,7 +6,7 @@ export class EmployeesService {
 
    public static async createEmployee(employee: { [propName: string]: string | number }): Promise<Employee> {
       try {
-         const response = await axios.post("http://localhost:3000/employee", employee);
+         const response = await axios.post("http://localhost:1337/employee", employee);
          return response.data[0];
       } catch (e) {
          ErrorService.showError(e.response?.data);
@@ -16,7 +16,7 @@ export class EmployeesService {
 
    public static async updateEmployee(employee: { [propName: string]: string | number }): Promise<Employee> {
       try {
-         const response = await axios.patch("http://localhost:3000/employee", employee);
+         const response = await axios.patch("http://localhost:1337/employee", employee);
          return response.data[0];
       } catch (e) {
          ErrorService.showError(e.response?.data);
@@ -26,7 +26,7 @@ export class EmployeesService {
 
    public static async deleteEmployeeById(employeeId: number): Promise<Employee> {
       try {
-         const response = await axios.delete("http://localhost:3000/employee", {
+         const response = await axios.delete("http://localhost:1337/employee", {
             data: { id: employeeId }
          });
          return response.data[0];
@@ -42,7 +42,7 @@ export class EmployeesService {
     */
    public static async getEmployeesList(): Promise<Employee[]> {
       try {
-         const response = await axios.get("http://localhost:3000/employees");
+         const response = await axios.get("http://localhost:1337/employees");
          return response.data;
       } catch (e) {
          ErrorService.showError(e.response?.data);

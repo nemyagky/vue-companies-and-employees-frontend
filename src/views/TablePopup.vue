@@ -40,13 +40,13 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+import Companies from "../components/companies.vue";
 import { Company } from "../interfaces/company.interface";
 import { CompanyPopupData } from "../interfaces/companyPopupData.interface";
 import { Employee } from "../interfaces/employee.interface";
 import { EmployeePopupData } from "../interfaces/employeePopupData.interface";
 import { CompaniesService } from "../services/companies.service";
 import { EmployeesService } from "../services/employees.service";
-import Companies from "../components/companies.vue";
 
 @Component({
   props: {
@@ -60,6 +60,10 @@ export default class TablePopup extends Vue {
   private type: "edit" | "create" = "create";
   private companiesNames: string[] = [];
 
+  /**
+   * Во время открытия страницы получаем список компаний от сервера и преобразовываем его в массив строк,
+   * Чтобы отобразить в select
+   */
   private async created() {
     if (this.$props.mode === "employees") {
       const companiesList: Company[] = await CompaniesService.getCompaniesList();
@@ -71,12 +75,12 @@ export default class TablePopup extends Vue {
   }
 
   /**
-   * Row is actual equals to Company | Employee | never, but Typescript throw an error
+   * Row is actual equals to Company | Employee, but Typescript throw an error
    * This function calls in Table.vue and it get row, from which pupup will be built
    *
    * Если мы создаем новую строку в колонке - тогда row будет пуст. Иначе row будет что-то содержать
    */
-  public initPopup(row?: any | never) {
+  public initPopup(row?: any) {
     if (this.$props.mode === "employees") {
       this.data = this.getPopupDataFromEmployee(row);
       this.header = row ? "Изменение сотрудника" : "Создание сотрудника";

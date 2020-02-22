@@ -6,7 +6,7 @@ export class CompaniesService {
 
    public static async createCompany(company: { [propName: string]: string | number }): Promise<Company> {
       try {
-         const response = await axios.post("http://localhost:3000/company", company);
+         const response = await axios.post("http://localhost:1337/company", company);
          return response.data[0];
       } catch (e) {
          ErrorService.showError(e.response?.data);
@@ -16,7 +16,7 @@ export class CompaniesService {
 
    public static async deleteCompanyById(companyId: number): Promise<Company> {
       try {
-         const response = await axios.delete("http://localhost:3000/company", {
+         const response = await axios.delete("http://localhost:1337/company", {
             data: { id: companyId }
          });
          return response.data[0];
@@ -32,7 +32,7 @@ export class CompaniesService {
     */
    public static async getCompaniesList(): Promise<Company[]> {
       try {
-         const response = await axios.get("http://localhost:3000/companies");
+         const response = await axios.get("http://localhost:1337/companies");
          return response.data;
       } catch (e) {
          ErrorService.showError(e.response?.data);
