@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Navigator from "./components/navigator.vue";
+import Navigator from "./views/Navigator.vue";
 
 export default Vue.extend({
   components: { Navigator }

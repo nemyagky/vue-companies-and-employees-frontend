@@ -1,5 +1,5 @@
 export interface EmployeePopupData {
-   id?: string;
+   id?: number;
    properties?: {
       firstName: {
          value: string,

@@ -91,7 +91,8 @@ export default class Table extends Vue {
   /**
    * Если просто присовить row в массив props, то не произойдет автоматического обновления HTML. Поэтому костылим
    */
-  private editRow(row: { [propname: string]: string }) {
+  private editRow(row: { [propname: string]: any }) {
+    // Перебираем каждое свойство в rowInProps и присваиваем ему свойство из row
     const rowInProps = this.$props.rows[this.getRowIndexById(row.id)];
 
     for (const property in rowInProps) {
@@ -107,13 +108,13 @@ export default class Table extends Vue {
     }
 
     if (this.$props.mode === "companies") {
-      CompaniesService.deleteCompanyById(row.id);
+      CompaniesService.deleteCompanyById(row.id).then(() => {
+        this.$props.rows.splice(this.getRowIndexById(row.id), 1);
+      });
     }
-
-    this.$props.rows.splice(this.getRowIndexById(row.id), 1);
   }
 
-  private getRowIndexById(id: string): number {
+  private getRowIndexById(id: number): number {
     return this.$props.rows.findIndex(
       (row: Employee | Company) => row.id === id
     );

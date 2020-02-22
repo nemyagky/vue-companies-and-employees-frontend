@@ -79,7 +79,7 @@ export default class TablePopup extends Vue {
 
   private getPopupDataFromEmployee(employee: Employee): EmployeePopupData {
     return {
-      id: employee?.id || "",
+      id: employee?.id || 1,
       properties: {
         firstName: {
           value: employee?.username.split(" ")[0] || "",
@@ -95,7 +95,8 @@ export default class TablePopup extends Vue {
           value: employee?.companyName || "",
           label: "Компания",
           type: "select",
-          selectData: CompaniesService.getCompaniesList()
+          // selectData: CompaniesService.getCompaniesList()
+          selectData: ["hjj"]
         }
       }
     };
@@ -103,7 +104,7 @@ export default class TablePopup extends Vue {
 
   private getPopupDataFromCompany(company: Company): CompanyPopupData {
     return {
-      id: company?.id || "",
+      id: company?.id || 1,
       properties: {
         name: {
           value: company?.name || "",
@@ -115,15 +116,12 @@ export default class TablePopup extends Vue {
   }
 
   private async save() {
-    // queryData - объект, который в дальнейшем будет отправлен на сервер
-    const queryData: any = this.popupDataToQueryData();
+    this.$emit("close");
 
+    // queryData - объект, который в дальнейшем будет отправлен на сервер
+    const queryData: any | false = this.popupDataToQueryData();
     if (!queryData) {
       return;
-    }
-
-    if (this.type === "edit") {
-      queryData.id = this.data.id;
     }
 
     if (this.$props.mode === "employees") {
@@ -144,16 +142,15 @@ export default class TablePopup extends Vue {
 
     if (this.$props.mode === "companies") {
       if (this.type === "create") {
-        const newCompanyData = await CompaniesService.createCompany(queryData);
-        this.$emit("new-row", newCompanyData);
+        CompaniesService.createCompany(queryData).then(newCompanyData => {
+          this.$emit("new-row", newCompanyData);
+        });
       }
     }
-
-    this.$emit("close");
   }
 
   /**
-   * Проходимся по всем свойствам в popupData и присваеваем их value в queryData
+   * Проходимся по всем свойствам в popupData.properties и присваеваем их value в возращаемый объект
    */
   private popupDataToQueryData() {
     const queryData: any = {};
@@ -167,6 +164,11 @@ export default class TablePopup extends Vue {
         }
         queryData[property] = popupData[property].value;
       }
+    }
+
+    // id лежит в this.data.id, а не в this.data.properties, поэтому присваиваем его вне цикла
+    if (this.type === "edit") {
+      queryData.id = this.data.id;
     }
 
     return queryData;

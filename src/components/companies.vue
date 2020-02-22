@@ -8,6 +8,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { DataTableHeader } from "vuetify";
 import { Company } from "../interfaces/company.interface";
+import { CompaniesService } from "../services/companies.service";
 import Table from "../views/Table.vue";
 
 @Component({
@@ -26,7 +27,7 @@ export default class Companies extends Vue {
     this.tableHeaders = [
       {
         text: "Дата создания",
-        value: "createdAt",
+        value: "created_at",
         filterable: false
       },
       { text: "Название", value: "name", filterable: true },
@@ -40,19 +41,8 @@ export default class Companies extends Vue {
     ];
   }
 
-  private getTableRows() {
-    this.tableRows = [
-      {
-        id: "1",
-        createdAt: Date.now().toString(),
-        name: "Рога и Копыта"
-      },
-      {
-        id: "2",
-        createdAt: Date.now().toString(),
-        name: "Рога и Подковы"
-      }
-    ];
+  private async getTableRows() {
+    this.tableRows = await CompaniesService.getCompaniesList();
   }
 }
 </script>

@@ -1,6 +1,6 @@
 import { TableRow } from './tableRow.interface';
 
 export interface Company extends TableRow {
-   createdAt: string;
+   created_at: string;
    name: string;
 }

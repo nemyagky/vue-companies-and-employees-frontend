@@ -16,7 +16,8 @@
       "array"
     ],
     "member-ordering": false,
-    "quotemark": false
+    "quotemark": false,
+    "arrow-parens": false
   },
   "rulesDirectory": []
 }

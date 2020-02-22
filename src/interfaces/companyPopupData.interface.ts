@@ -1,5 +1,5 @@
 export interface CompanyPopupData {
-   id?: string;
+   id?: number;
    properties?: {
       name: {
          value: string,

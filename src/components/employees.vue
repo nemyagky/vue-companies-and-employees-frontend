@@ -29,7 +29,7 @@ export default class Employees extends Vue {
 
   private initTableHeaders() {
     this.tableHeaders = [
-      { text: "Дата создания", value: "createdAt", filterable: false },
+      { text: "Дата создания", value: "created_at", filterable: false },
       { text: "Сотрудник", value: "username", filterable: true },
       { text: "Компания", value: "companyName", filterable: true },
       {
@@ -45,14 +45,14 @@ export default class Employees extends Vue {
   private getTableRows() {
     this.tableRows = [
       {
-        id: "1",
-        createdAt: Date.now().toString(),
+        id: 1,
+        created_at: Date.now().toString(),
         username: "Иван Мягкий",
         companyName: "Рога И Копыта"
       },
       {
-        id: "2",
-        createdAt: Date.now().toString(),
+        id: 1,
+        created_at: Date.now().toString(),
         username: "Иван Немягкий",
         companyName: "Рога И Копыта"
       }
