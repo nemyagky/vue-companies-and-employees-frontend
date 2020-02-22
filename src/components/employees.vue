@@ -13,6 +13,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { DataTableHeader } from "vuetify";
 import { Employee } from "../interfaces/employee.interface";
+import { EmployeesService } from "../services/employees.service";
 import Table from "../views/Table.vue";
 
 @Component({
@@ -31,7 +32,7 @@ export default class Employees extends Vue {
     this.tableHeaders = [
       { text: "Дата создания", value: "created_at", filterable: false },
       { text: "Сотрудник", value: "username", filterable: true },
-      { text: "Компания", value: "companyName", filterable: true },
+      { text: "Компания", value: "company_name", filterable: true },
       {
         text: "Действия",
         value: "action",
@@ -42,21 +43,8 @@ export default class Employees extends Vue {
     ];
   }
 
-  private getTableRows() {
-    this.tableRows = [
-      {
-        id: 1,
-        created_at: Date.now().toString(),
-        username: "Иван Мягкий",
-        companyName: "Рога И Копыта"
-      },
-      {
-        id: 1,
-        created_at: Date.now().toString(),
-        username: "Иван Немягкий",
-        companyName: "Рога И Копыта"
-      }
-    ];
+  private async getTableRows() {
+    this.tableRows = await EmployeesService.getEmployeesList();
   }
 }
 </script>

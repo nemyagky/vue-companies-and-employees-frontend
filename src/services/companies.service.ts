@@ -4,7 +4,7 @@ import { ErrorService } from './error.service';
 
 export class CompaniesService {
 
-   public static async createCompany(company: { [propName: string]: string | number }): Promise<Company | Error> {
+   public static async createCompany(company: { [propName: string]: string | number }): Promise<Company> {
       try {
          const response = await axios.post("http://localhost:3000/company", company);
          return response.data[0];
@@ -14,7 +14,7 @@ export class CompaniesService {
       }
    }
 
-   public static async deleteCompanyById(companyId: number) {
+   public static async deleteCompanyById(companyId: number): Promise<Company> {
       try {
          const response = await axios.delete("http://localhost:3000/company", {
             data: { id: companyId }
@@ -26,7 +26,11 @@ export class CompaniesService {
       }
    }
 
-   public static async getCompaniesList() {
+   /**
+    * Возращаем список всех компаний. Так как объеъм данных небольшой, то нет смысла заморачиваться с пагинацией
+    * Vuetify table предоставляет пагинацию из коробки
+    */
+   public static async getCompaniesList(): Promise<Company[]> {
       try {
          const response = await axios.get("http://localhost:3000/companies");
          return response.data;

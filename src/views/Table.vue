@@ -104,7 +104,9 @@ export default class Table extends Vue {
 
   private deleteRow(row: TableRow) {
     if (this.$props.mode === "employees") {
-      EmployeesService.deleteEmployeeById(row.id);
+      EmployeesService.deleteEmployeeById(row.id).then(() => {
+        this.$props.rows.splice(this.getRowIndexById(row.id), 1);
+      });
     }
 
     if (this.$props.mode === "companies") {

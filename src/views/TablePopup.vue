@@ -20,6 +20,7 @@
                 :item-value="input.value"
                 :items="input.selectData"
                 :label="input.label"
+                no-data-text="Компании не найдены"
               ></v-select>
             </v-col>
           </v-row>
@@ -45,6 +46,7 @@ import { Employee } from "../interfaces/employee.interface";
 import { EmployeePopupData } from "../interfaces/employeePopupData.interface";
 import { CompaniesService } from "../services/companies.service";
 import { EmployeesService } from "../services/employees.service";
+import Companies from "../components/companies.vue";
 
 @Component({
   props: {
@@ -56,6 +58,17 @@ export default class TablePopup extends Vue {
   private data: EmployeePopupData | CompanyPopupData = {};
   private header: string = "";
   private type: "edit" | "create" = "create";
+  private companiesNames: string[] = [];
+
+  private async created() {
+    if (this.$props.mode === "employees") {
+      const companiesList: Company[] = await CompaniesService.getCompaniesList();
+      this.companiesNames = companiesList.map(company => {
+        return company.name;
+      });
+    }
+    this.initPopup();
+  }
 
   /**
    * Row is actual equals to Company | Employee | never, but Typescript throw an error
@@ -63,7 +76,7 @@ export default class TablePopup extends Vue {
    *
    * Если мы создаем новую строку в колонке - тогда row будет пуст. Иначе row будет что-то содержать
    */
-  public initPopup(row: any | never) {
+  public initPopup(row?: any | never) {
     if (this.$props.mode === "employees") {
       this.data = this.getPopupDataFromEmployee(row);
       this.header = row ? "Изменение сотрудника" : "Создание сотрудника";
@@ -92,11 +105,10 @@ export default class TablePopup extends Vue {
           type: "input"
         },
         company: {
-          value: employee?.companyName || "",
+          value: employee?.company_name || "",
           label: "Компания",
           type: "select",
-          // selectData: CompaniesService.getCompaniesList()
-          selectData: ["hjj"]
+          selectData: this.companiesNames
         }
       }
     };
@@ -115,9 +127,7 @@ export default class TablePopup extends Vue {
     };
   }
 
-  private async save() {
-    this.$emit("close");
-
+  private save() {
     // queryData - объект, который в дальнейшем будет отправлен на сервер
     const queryData: any | false = this.popupDataToQueryData();
     if (!queryData) {
@@ -126,27 +136,33 @@ export default class TablePopup extends Vue {
 
     if (this.$props.mode === "employees") {
       if (this.type === "edit") {
-        const newEmployeeData = await EmployeesService.updateEmployee(
-          queryData
+        EmployeesService.updateEmployee(queryData).then(
+          (updatedEmployeeData: Employee) => {
+            this.$emit("edited-row", updatedEmployeeData);
+          }
         );
-        this.$emit("edited-row", newEmployeeData);
       }
 
       if (this.type === "create") {
-        const newEmployeeData = await EmployeesService.createEmployee(
-          queryData
+        EmployeesService.createEmployee(queryData).then(
+          (newEmployeeData: Employee) => {
+            this.$emit("new-row", newEmployeeData);
+          }
         );
-        this.$emit("new-row", newEmployeeData);
       }
     }
 
     if (this.$props.mode === "companies") {
       if (this.type === "create") {
-        CompaniesService.createCompany(queryData).then(newCompanyData => {
-          this.$emit("new-row", newCompanyData);
-        });
+        CompaniesService.createCompany(queryData).then(
+          (newCompanyData: Company) => {
+            this.$emit("new-row", newCompanyData);
+          }
+        );
       }
     }
+
+    this.$emit("close");
   }
 
   /**
